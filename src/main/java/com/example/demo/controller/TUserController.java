@@ -34,6 +34,7 @@ public class TUserController {
         model.addAttribute("tagList",tagList);
         model.addAttribute("sortList",sortList);
         System.out.println("测试GitHub提交");
+        System.out.println("测试GitHub pull");
         return  "admin";
     }
 //    修改文章
