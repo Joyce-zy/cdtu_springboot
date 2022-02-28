@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签 | MyBlog</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../static/css/public.css" th:href="@{/css/public.css}"/>
+    <link type="text/css" rel="stylesheet" href="../static/css/tags.css" th:href="@{/css/tags.css}"/>
+    <script src="../static/js/jquery-2.1.1.min.js" th:src="@{/js/jquery-2.1.1.min.js}"></script>
+</head>
+<body>
+<div class="head_line"></div>
+
+<div class="container" id="main">
+
+    <div id="header"></div>
+
+    <div class="row c_center">
+        <div class="col-md-3" id="left_content">
+
+            <div id="title">
+                <h2>
+                    <a >MyBlog</a>
+                </h2>
+                <h5 class="text-muted" th:text="${tUser.getUserSign()}">Winner Winner Chicken Dinner!</h5>
+            </div>
+
+            <div class="c_center" id="person_info">
+                <img src="../../img/header.jpg" th:src="@{${tUser.getUserImg()}}" height="130" width="130"
+                     alt="what?" class="img-circle">
+                <h5 class="text-muted">Chicken Dinner Again!</h5>
+            </div>
+
+
+            <div id="list">
+                <table class="table table-hover c_center">
+                    <tr>
+                        <td><a  th:href="@{/loginOut}"><span class="glyphicon glyphicon-home"></span>
+                            &nbsp;&nbsp;首页</a></td>
+                    </tr>
+                    <tr>
+                        <td><a  th:href="@{/sortArticle}"><span class="glyphicon glyphicon-list"></span>
+                            &nbsp;&nbsp;分类</a></td>
+                    </tr>
+                    <tr>
+                        <td class="active"><a  th:href="@{/getTagInfo}"><span class="glyphicon glyphicon-tags"></span>
+                            &nbsp;&nbsp;标签</a></td>
+                    </tr>
+                    <tr>
+                        <td><a  th:href="@{/about}"><span class="glyphicon glyphicon-user"></span>
+                            &nbsp;&nbsp;关于</a></td>
+                    </tr>
+                </table>
+            </div>
+            <!-- list -->
+            <br/>
+        </div>
+        <div class="col-md-2" id="center_content"></div>
+        <div class="col-md-7 " id="right_content">
+            <br/><br/>
+            <div class="list-group">
+
+                <a href="#" class="list-group-item active">标签</a>
+                <!-- 这里初始化标签 -->
+                <div th:each="map, stat:${TTagmap}">
+                    <div class="tags_name">
+                        <!-- 标签名字 -->
+                        <span class="glyphicon glyphicon-triangle-bottom" th:text="${map.key}"></span>
+                    </div>
+                    <div>
+                        <!-- 标签信息 -->
+                        <ul class="list-group">
+                                <li class="list-group-item" th:each="list, stat:${map.value}">
+                                    <div>
+                                        <div>
+                                            <div>
+                                                <a  th:href="@{'/getTarticle/'+${list.id}}" th:text="${list.getTitle()}"></a>
+                                            </div>
+                                            <div class="c_right">
+                                                    <img  th:src="@{/img/time.png}" th:text="${list.getTime()}">
+                                                <span class="visit">
+                                                    <img  th:src="@{/img/visit.png}" th:text="${list.getVisit()}">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 初始化标签完成 -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="foot_line"></div>
+</div>
+<!-- container -->
+
+
+<div id="footer">
+    <a href="javascript:scroll(0,0)">&nbsp;&nbsp;MyBlog</a>
+</div>
+<!-- footer -->
+
+</body>
+</html>

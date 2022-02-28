@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 | MyBlog</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/login.css" th:href="@{/css/login.css}" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container" id="main">
+
+    <form class="form-signin" id="form" action="/login">
+        <input th:text="${msg}" type="hidden">
+        <a href="login.jsp">
+            <h2 class="form-signin-heading">MyBlog</h2>
+        </a>
+        <div class="form-group has-feedback">
+            <input type="text" class="form-control" id="username" name="username" placeholder="账号">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password" class="form-control" id="password" name="password" placeholder="密码">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit">登录
+        </button>
+        <a  th:href="@{/main}">访客登录</a>
+    </form>
+</div>
+<div id="footer">
+    <div>
+        <a href="https://github.com/LonelyXy">
+            <img src="img/github.png" width="20px" height="20px"
+                 class="img-circle">&nbsp;&nbsp;GitHub
+        </a>
+        &nbsp;|
+        <a href="#">&nbsp;&nbsp;Sakura</a>
+    </div>
+</div>
+</body>
+<script src="js/jquery-2.1.1.min.js" th:src="@{/js/jquery-2.1.1.min.js}" ></script>
+<script src="js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}" ></script>
+<script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!--<script>-->
+<!--    $("#submit").click(function (){-->
+<!--        $.ajax({-->
+<!--            type:"GET",-->
+<!--            url:"/login",-->
+<!--            data:{-->
+<!--                username:$("#username").val(),-->
+<!--                password:$("#password").val(),-->
+<!--            },-->
+
+<!--            success: function (res){-->
+<!--                console.log(res)-->
+<!--                if(res.code != 20000){-->
+<!--                    alert(res.msg)-->
+<!--                }-->
+<!--                if(res.code == 20000){-->
+<!--                    var to = res.token-->
+<!--                    $.cookie("token", to,-->
+<!--                        {path:"/"}-->
+<!--                    );-->
+<!--                    window.location.href = "home/main?token=" + to-->
+<!--                }-->
+<!--            }-->
+<!--        })-->
+<!--    })-->
+<!--</script>-->
+</html>

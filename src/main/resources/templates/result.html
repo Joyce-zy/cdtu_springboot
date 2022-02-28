@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>结果 | MyBlog</title>
+<!-- Bootstrap core CSS -->
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="signin.css" rel="stylesheet">
+
+<!-- 引入页面公共样式 -->
+<link type="text/css" rel="stylesheet" href="../static/css/public.css" th:href="@{/css/public.css}" />
+
+</head>
+<body>
+	<div class="head_line"></div>
+	<div class="container" id="main">
+		<div class="row c_center" style="margin:0, auto;">
+			<h4 th:if="${articleId} < 0">
+				创建或更新文章失败了.....
+			</h4>
+			<h4 th:if="${articleId > 0}">成功!是否现在查看文章
+				<a href="/Blog/ArticleServlet?id=${article.id}"
+				   th:href="@{'/getTarticle/'+${articleId}}" th:text="${newArticleTitle}">${article.title}</a>
+			</h4>
+		</div>		
+		<div class="foot_line"></div>
+	</div>	
+	<!-- container -->
+	
+	
+	
+	<div id="footer">
+		<a href="/Blog/index.jsp">&nbsp;&nbsp;MyBlog</a>
+	</div>
+	<!-- footer -->
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tArticle.title + ' | MyBlog'}"></title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入本页面的特殊样式 -->
+    <link type="text/css" rel="stylesheet"   th:href="@{/css/article.css}"/>
+    <link type="text/css" rel="stylesheet"  th:href="@{/css/comment.css}"/>
+    <link rel="stylesheet"  th:href="@{/editormd/css/style.css}" />
+    <link rel="stylesheet"  th:href="@{/editormd/css/editormd.preview.css}" />
+
+</head>
+<body>
+<div class="head_line"></div>
+<div class="container" id="main">
+    <!--头部-->
+    <div class="head">
+        <div id="title">
+            <h2>
+                <a href="users/index">MyBlog</a>
+            </h2>
+        </div>
+    </div>
+
+    <!--文章内容-->
+    <div id="article">
+        <!--标题-->
+        <div id="a_head ">
+            <h3 th:text="${tArticle.getTitle()}"></h3>
+            <br/>
+            <!--展示 文章时间   文章类别(可以跳转连接)  文章作者-->
+            <div>
+                <h5>
+                    <span th:text="${tArticle.getTime()}"></span> <a href="" th:text="${tArticle.getSort()}"></a>
+                    <span th:text="${tArticle.getAuthor()}"></span>
+                </h5>
+            </div>
+            <!--展示文章的访问次数    喜欢次数   评论次数-->
+            <div class="r_div">
+                <h5>
+                    <span class="glyphicon glyphicon-eye-open" th:text="${tArticle.getVisit()}">&nbsp</span>
+                    <span class="glyphicon glyphicon-heart" id="love" th:text="${tArticle.getStar()}">&nbsp&nbsp;</span>
+                    <span class="glyphicon glyphicon-comment" th:text="${tArticle.getComment()}"></span>
+                </h5>
+            </div>
+            <!--展示该文章的标签-->
+            <div id="tag" >
+                <a href="" th:each="ttag : ${tag_List}" th:text="${ttag.getTag()} + ' '"></a>
+            </div>
+        </div>
+    </div>
+    <!--分割线-->
+    <div class="line"></div>
+
+    <!-- 引入 show.jsp 显示文章内容 ${article.content}-->
+    <div id="a_content">
+        <div id="mdView"  style="background:#eee;">
+            <textarea id="article_content" th:text="${tArticle.getContent()}"></textarea>
+        </div>
+        <br />
+    </div>
+    <div>
+        <div class="f_div">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+<!--            <c:choose>-->
+<!--                <c:when test="${article_pre!=null}">-->
+<!--                    <a href="articles/getById?id=${article_pre.id}">&nbsp;上一篇:${article_pre.title}</a>-->
+<!--                </c:when>-->
+<!--                <c:otherwise>-->
+<!--                    &nbsp;没有更早的文章了-->
+<!--                </c:otherwise>-->
+<!--            </c:choose>-->
+
+        </div>
+        <div class="r_div">
+<!--            <c:choose>-->
+<!--                <c:when test="${article_next!=null}">-->
+<!--                    <a href="articles/getById?id=${article_next.id}">下一篇:&nbsp;${article_next.title}</a>-->
+<!--                </c:when>-->
+<!--                <c:otherwise>-->
+<!--                    &nbsp;没有更多的文章了-->
+<!--                </c:otherwise>-->
+<!--            </c:choose>-->
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </div>
+
+        <div>
+            <span class="btn btn-default" style="color:#d9534f;" id="star_btn">点赞</span>
+        </div>
+        <br/>
+    </div>
+    <div class="line"></div>
+    <!-- 评论 -->
+    <div class="comment" >
+        <!-- 加载文章评论 -->
+        <div th:if="${tCommentList != null}">
+           <div th:each="comm :${tCommentList}">
+                <div class="row">
+                    <div class="f_div">
+                        <img src="../../img/comment.jpg" th:src="@{/img/comment.jpg}" height="50" width="50" class="img-circle"/>
+                        &nbsp;&nbsp;
+                        <span style="color: #428bca" th:text="${comm.nickname}"> </span>
+                        <span th:text="${comm.time}">&nbsp</span>
+                    </div>
+                    <div id="c_content" class="c_left">
+                        <pre th:text="${comm.content }"></pre>
+                    </div>
+                    <div class="r_div">
+                        <a><span class="glyphicon glyphicon-thumbs-up"
+                                 th:text="${comm.star}" ></span></a>
+                        &nbsp;
+                        <a><span class="glyphicon glyphicon-thumbs-down"
+                                 th:text="${comm.diss}"></span></a>
+                        &nbsp;
+                        <!-- admin here -->
+<!--                        <div th:if="${userInfo.getUserStatus() == 1}">-->
+<!--                            <span class="btn btn-default" id="del_btn" style="color:red;"-->
+<!--                                  onclick="deletecm(${comm.id})">删除</span>-->
+<!--                            &nbsp;-->
+<!--                        </div>-->
+                    </div>
+                    <div class="line"></div>
+                </div>
+
+           </div>
+
+        </div>
+    </div>
+    <!-- 这里可以扩展子评论 -->
+
+
+    <!-- 写评论 -->
+    <div class="r_div" th:if="${not #strings.isEmpty(tUser)}">
+        <a href="javascript:void(0);"><span class="glyphicon glyphicon-pencil">&nbsp;写评论....</span></a>
+    </div>
+    <div id="comment">
+        <form id="form" >
+            <input style="width:30%;display: none;" class="form-control" type="text" id="articleId" name="articleId" value="${article.id}" th:value="${tArticle.id}" >
+            <input style="width:30%" class="form-control" type="text" id="nickname" name="nickname" value="热心网友" th:value="${tUser.getUserName()}">
+            <br/>
+            <textarea style="resize:none; width:100%; height:180px;" id="content" name="content"></textarea>
+            <br/>
+            <br/>
+            <input class="btn btn-default" type="button" value="评论" id="btn" />
+            <br/>
+        </form>
+    </div>
+    <div class="line"></div>
+</div>
+<div id="footer">
+
+</div>  <a href="index.html">MyBlog首页&nbsp;&nbsp;</a>|F
+<a href="javascript:scroll(0,0)">&nbsp;&nbsp;返回顶部</a>
+<!-- footer -->
+</body>
+<script src="../static/js/jquery-2.1.1.min.js" th:src="@{../js/jquery-2.1.1.min.js}"></script>
+<script src="../static/js/layer/layer.js" th:src="@{../js/layer/layer.js}"></script>
+<script src="../static/js/article.js" th:src="@{../js/article.js}"></script>
+<script src="../static/editormd/js/zepto.min.js" th:src="@{../editormd/js/zepto.min.js}"></script>
+<script src="../static/editormd/js/editormd.js" th:src="@{../editormd/js/editormd.js}"></script>
+<script src="../static/editormd/lib/marked.min.js" th:src="@{../editormd/lib/marked.min.js}"></script>
+<script src="../static/editormd/lib/prettify.min.js" th:src="@{../editormd/lib/prettify.min.js}"></script>
+<script src="../static/editormd/lib/raphael.min.js" th:src="@{../editormd/lib/raphael.min.js}"></script>
+<script src="../static/editormd/lib/underscore.min.js" th:src="@{../editormd/lib/underscore.min.js}"></script>
+<script src="../static/editormd/lib/sequence-diagram.min.js" th:src="@{../editormd/lib/sequence-diagram.min.js}"></script>
+<script src="../static/editormd/lib/flowchart.min.js" th:src="@{../editormd/lib/flowchart.min.js}"></script>
+<script src="../static/editormd/lib/jquery.flowchart.min.js" th:src="@{../editormd/lib/jquery.flowchart.min.js}"></script>
+<script type="text/javascript">
+    $(function mdToHtml() {
+        //获取要显示的内容
+        editormd.markdownToHTML("mdView", {
+            htmlDecode : "style,script,iframe",
+            emoji : true,
+            taskList : true,
+            tex : true, // 默认不解析
+            flowChart : true, // 默认不解析
+            sequenceDiagram : true, // 默认不解析
+        });
+    });
+
+    $("#btn").click(function (){
+        $.ajax({
+            type:"POST",
+            url:"/tComment/insert",
+            dataType:"JSON",
+            data:{
+                articleId:$("#articleId").val(),
+                nickname:$("#nickname").val(),
+                content:$("#content").val()
+            },
+
+            success: function (res){
+                console.log(res)
+                if(res.code == 200){
+                    window.location.reload()
+                }else{
+                    alert("评论失败")
+                }
+            }
+        })
+    })
+    $("#star_btn").click(function (){
+        $.ajax({
+            type: "POST",
+            url:"/tArticle/updateArticleStar",
+            data: {
+                id:$("#articleId").val(),
+            },
+            success:function (res){
+                console.log(res)
+                if(res.code == 40000){
+                    window.location.reload()
+                    alert("点赞成功")
+                }else{
+                    alert("点赞失败")
+                }
+            }
+        })
+    })
+    $("#del_btn").click(function (){
+        $.ajax({
+            type:"POST",
+            url:"/tComment/delete",
+            data:{
+                id:$("#articleId").val(),
+            },
+            success: function (res){
+                if(res.code == 60000){
+                    window.location.reload()
+                }else{
+                    alert("删除失败")
+                }
+            }
+        })
+    })
+</script>
+</html>

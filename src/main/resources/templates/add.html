@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>新的文章 | MyBlog</title>
+
+
+	<!-- Bootstrap core CSS -->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link type="text/css" rel="stylesheet" href="../static/css/add.css" th:href="@{/css/add.css}" />
+	<link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="../static/editormd/css/editormd.css" th:href="@{/editormd/css/editormd.css}" />
+	<script src="../static/editormd/js/zepto.min.js" th:src="@{/editormd/js/zepto.min.js}"></script>
+	<script src="../static/editormd/js/editormd.js" th:src="@{/editormd/js/editormd.js}"></script>
+	<script src="../static/js/add.js" th:src="@{/js/add.js}"></script>
+</head>
+<body>
+<div class="head_line"></div>
+<div class="container" id="main">
+	<div id="title"><h2><a>MyBlog</a></h2>
+	</div>
+
+	<div class="info" >
+		<!-- title -->
+		<span class="help">标题</span>
+		<input type="text" class="form-control" id="iTitle" name="title" >
+		<!-- time -->
+		<span class="help">时间</span>
+		<input type="text"  class="form-control" id="iTime" name="time" value="${time}" th:value="${nowTime}" >
+		<!-- author-->
+		<span class="help">作者</span>
+		<input type="text" class="form-control" id="iAuthor" name="author" th:value="${autorName}" >
+		<!-- sort -->
+		<span class="help">分类</span><br/>
+		<input th:each="sort, stat:${sortList}" class="btn btn-default" type="button" value="${s.key}" th:value="${sort.sort}" onclick="sort_click(this)">
+		<input type="text" class="form-control"  id="sort" name="sort">
+
+		<!-- tag -->
+		<span class="help">标签</span><br/>
+		<input th:each="tag, stat:${tagList}" class="btn btn-default" type="button" value="${tag.tag}" th:value="${tag.tag}" onclick="tags_click(this)">&nbsp;
+		<input type="text" class="form-control" id="tags"  name="tags">
+	</div>
+
+
+	<div class="foot_line"></div>
+	<!-- content -->
+	<div class="editormd" id="mdView">
+		<textarea id="iContent" name="content"></textarea>
+	</div>
+	<br/>
+	<input class="btn btn-default" type="button" id="btn" value="提交" />
+
+	<div class="foot_line"></div>
+	<!-- container -->
+</div><!-- container -->
+
+<div id="footer">
+	<a href="#">&nbsp;&nbsp;MyBlog</a>
+
+</div> <!-- footer -->
+
+<script type="text/javascript">
+	var testEditor;
+	var jQuery = Zepto;
+	$(function() {
+		testEditor = editormd("mdView", {
+			width  : "90%",
+			height : 720,
+			path   : '/editormd/lib/',
+			codeFold : true,
+			searchReplace : true,
+			saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+			htmlDecode : "style,script,iframe|on*", // 开启 HTML 标签解析，为了安全性，默认不开启
+			emoji : true,
+			taskList : true,
+			tocm: true,
+			tex : true,
+			flowChart : true,
+			sequenceDiagram : true,
+			imageUpload : true,
+			imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+			imageUploadURL : "/Blog/UploadPic",
+			//后台只需要返回一个 JSON 数据
+			onload : function() {
+				//console.log("onload =>", this, this.id, this.settings);
+			}
+		});
+		editor.setToolbarAutoFixed(false);//工具栏自动固定定位的开启与禁用
+	});
+
+	$("#btn").click(function (){
+		$.ajax({
+			type:"POST",
+			url:"/tArticle/insert",
+			data:{
+				"title":$("#iTitle").val(),
+				"author":$("#iAuthor").val(),
+				"sort":$("#sort").val(),
+				"time":$("#iTime").val(),
+				"content":$("#iContent").val(),
+				tags:$("#tags").val()
+			},
+			success: function (res){
+				console.log(res)
+				if(res.code == 20000){
+					window.location.href='/tArticle/result/'+res.articleId
+				}else{
+					alert("添加失败！")
+				}
+			}
+		})
+	})
+</script>
+</body>
+</html>
